@@ -1,32 +1,45 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({ token: null, user: null });
+  const [token, setToken] = useState(null);
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      // You might want to verify the token with the backend here and get user info
-      setAuth({ token, user: {} }); // Placeholder for user
+    const stored = localStorage.getItem('auth_token');
+    if (stored) {
+      setToken(stored);
+      axios.defaults.headers.common.Authorization = `Bearer ${stored}`;
     }
+    setInitializing(false);
   }, []);
 
-  const login = (token) => {
-    localStorage.setItem('token', token);
-    setAuth({ token, user: {} }); // Placeholder for user
-  };
+  const login = useCallback(
+    (newToken) => {
+      setToken(newToken);
+      localStorage.setItem('auth_token', newToken);
+      axios.defaults.headers.common.Authorization = `Bearer ${newToken}`;
+    },
+    []
+  );
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    setAuth({ token: null, user: null });
+  const logout = useCallback(() => {
+    setToken(null);
+    localStorage.removeItem('auth_token');
+    delete axios.defaults.headers.common.Authorization;
+  }, []);
+
+  const value = {
+    token,
+    isAuthenticated: !!token,
+    initializing,
+    login,
+    logout,
   };
 
   return (
-    <AuthContext.Provider value={{ auth, login, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
   );
 };

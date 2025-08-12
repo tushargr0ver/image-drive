@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import { Container, Box } from '@mui/material';
+import { Container, Box, CircularProgress } from '@mui/material';
 import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -10,8 +10,15 @@ import Folder from './pages/Folder';
 import { AuthContext } from './context/AuthContext';
 
 const ProtectedRoute = ({ children }) => {
-  const { auth } = useContext(AuthContext);
-  if (!auth.token) return <Navigate to="/login" replace />;
+  const { token, initializing } = useContext(AuthContext);
+  if (initializing) {
+    return (
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '50vh' }}>
+        <CircularProgress size={32} />
+      </Box>
+    );
+  }
+  if (!token) return <Navigate to="/login" replace />;
   return children;
 };
 
