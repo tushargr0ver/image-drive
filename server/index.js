@@ -10,14 +10,11 @@ connectDB();
 
 const port = process.env.PORT || 5000;
 
-// const corsOptions = {
-//   origin: 'https://image-drive.tushr.xyz',
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//   allowedHeaders: ['Content-Type', 'Authorization'],
-// };
-
-app.use(cors({ origin: '*', methods: ['GET','POST','PUT','DELETE','OPTIONS'], allowedHeaders: ['Content-Type','Authorization'] }));
-app.options('*', cors());
+const corsOptions = {
+  origin: 'https://image-drive.tushr.xyz',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
 
 app.use(express.json());
 
