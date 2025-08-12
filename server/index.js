@@ -10,7 +10,12 @@ connectDB();
 
 const port = process.env.PORT || 5000;
 
-app.use(cors());
+const corsOptions = {
+  origin: 'https://image-drive.tushr.xyz', // You will replace this later
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
 app.use(express.json());
 
 app.use('/api/auth', require('./routes/auth'));

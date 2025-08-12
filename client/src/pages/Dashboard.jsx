@@ -23,9 +23,9 @@ const Dashboard = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       };
-      const foldersRes = await axios.get('http://localhost:5000/api/folders', config);
-      const imagesRes = await axios.get('http://localhost:5000/api/images', config);
-      
+      const foldersRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/folders`, config);
+      const imagesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/images`, config);
+
       const rootFolders = foldersRes.data.filter(f => f.parent === null);
       const rootImages = imagesRes.data.filter(i => i.folder === null);
 

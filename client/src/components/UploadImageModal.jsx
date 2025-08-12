@@ -59,7 +59,7 @@ const UploadImageModal = ({ isOpen, onClose, folder, onImageUploaded }) => {
           }
         }
       };
-      const res = await axios.post('http://localhost:5000/api/images', formData, config);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/images`, formData, config);
       onImageUploaded(res.data);
       setName('');
       setFile(null);

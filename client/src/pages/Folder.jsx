@@ -27,9 +27,9 @@ const FolderPage = () => {
           Authorization: `Bearer ${auth.token}`,
         },
       };
-      const folderRes = await axios.get(`http://localhost:5000/api/folders/${folderId}`, config);
-      const imagesRes = await axios.get(`http://localhost:5000/api/images/folder/${folderId}`, config);
-      
+      const folderRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/folders/${folderId}`, config);
+      const imagesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/images/folder/${folderId}`, config);
+
       setFolder(folderRes.data);
       setItems(imagesRes.data);
     } catch (err) {

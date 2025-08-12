@@ -19,7 +19,7 @@ const CreateFolderModal = ({ isOpen, onClose, parent, onFolderCreated }) => {
         },
       };
       const body = JSON.stringify({ name, parent });
-      const res = await axios.post('http://localhost:5000/api/folders', body, config);
+      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/folders`, body, config);
       onFolderCreated(res.data);
       setName('');
       onClose();
