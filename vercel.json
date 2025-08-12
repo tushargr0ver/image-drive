@@ -7,19 +7,14 @@
       "config": { "distDir": "dist" }
     }
   ],
+  "env": {
+    "REACT_APP_API_URL": "https://your-backend-domain.example"
+  },
   "routes": [
-    { "src": "/api/(.*)", "dest": "https://your-backend.onrender.com/api/$1" },
-    { "src": "/(.*)\\.(js|css|png|jpg|jpeg|gif|svg|ico|txt|json|webmanifest)", "headers": { "cache-control": "public,max-age=31536000,immutable" } },
+    { "src": "/api/(.*)", "dest": "https://your-backend-domain.example/api/$1" },
+    { "src": "/uploads/(.*)", "dest": "https://your-backend-domain.example/uploads/$1" },
+    { "src": "/(.*)\\.(?:js|css|png|jpg|jpeg|gif|svg|ico|webp|txt|json|webmanifest)", "headers": { "Cache-Control": "public,max-age=31536000,immutable" } },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/(.*)",
-      "headers": [
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
-      ]
-    }
   ]
 }
