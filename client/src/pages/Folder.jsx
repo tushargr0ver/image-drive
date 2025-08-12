@@ -7,6 +7,9 @@ import Folder from '../components/Folder';
 import Image from '../components/Image';
 import CreateFolderModal from '../components/CreateFolderModal';
 import UploadImageModal from '../components/UploadImageModal';
+import ItemGrid from '../components/ItemGrid';
+import { Button, Stack, Typography, Breadcrumbs, Link as MLink } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const FolderPage = () => {
   const { folderId } = useParams();
@@ -58,9 +61,15 @@ const FolderPage = () => {
 
   return (
     <div>
-      <h1>{folder.name}</h1>
-      <button onClick={() => setFolderModalOpen(true)}>Create Subfolder</button>
-      <button onClick={() => setImageModalOpen(true)}>Upload Image</button>
+      <Breadcrumbs sx={{ mb: 1 }}>
+        <MLink component={Link} underline="hover" color="inherit" to="/">Root</MLink>
+        <Typography color="text.primary">{folder.name}</Typography>
+      </Breadcrumbs>
+      <Typography variant="h2" sx={{ fontSize: 28, mb: 2 }}>{folder.name}</Typography>
+      <Stack direction="row" spacing={2} mb={2}>
+        <Button size="small" onClick={() => setFolderModalOpen(true)}>Create Subfolder</Button>
+        <Button size="small" color="secondary" onClick={() => setImageModalOpen(true)}>Upload Image</Button>
+      </Stack>
       <CreateFolderModal 
         isOpen={isFolderModalOpen} 
         onClose={() => setFolderModalOpen(false)} 
@@ -73,11 +82,15 @@ const FolderPage = () => {
         folder={folderId}
         onImageUploaded={onImageUploaded}
       />
-      <div>
-        {filteredItems.map((item) =>
-          <Image key={item._id} image={item} />
-        )}
-      </div>
+      {filteredItems.length === 0 ? (
+        <Typography variant="body1" sx={{ mt: 3 }}>No images {searchTerm ? 'match your search.' : 'in this folder yet.'}</Typography>
+      ) : (
+        <ItemGrid>
+          {filteredItems.map((item) =>
+            <Image key={item._id} image={item} />
+          )}
+        </ItemGrid>
+      )}
     </div>
   );
 };

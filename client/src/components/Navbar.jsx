@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { SearchContext } from '../context/SearchContext';
@@ -50,6 +50,12 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 const Navbar = () => {
   const { auth, logout } = useContext(AuthContext);
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
+  const [draftSearch, setDraftSearch] = useState(searchTerm);
+
+  useEffect(() => {
+    const h = setTimeout(() => setSearchTerm(draftSearch), 300);
+    return () => clearTimeout(h);
+  }, [draftSearch, setSearchTerm]);
 
   return (
     <AppBar position="static">
@@ -66,8 +72,8 @@ const Navbar = () => {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={draftSearch}
+                onChange={(e) => setDraftSearch(e.target.value)}
               />
             </Search>
             <Button color="inherit" onClick={logout}>Logout</Button>

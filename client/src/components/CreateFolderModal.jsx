@@ -1,13 +1,16 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
 
 const CreateFolderModal = ({ isOpen, onClose, parent, onFolderCreated }) => {
   const [name, setName] = useState('');
   const { auth } = useContext(AuthContext);
+  const [submitting, setSubmitting] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
     try {
       const config = {
         headers: {
@@ -18,30 +21,37 @@ const CreateFolderModal = ({ isOpen, onClose, parent, onFolderCreated }) => {
       const body = JSON.stringify({ name, parent });
       const res = await axios.post('http://localhost:5000/api/folders', body, config);
       onFolderCreated(res.data);
+      setName('');
       onClose();
     } catch (err) {
       console.error(err);
+    } finally {
+      setSubmitting(false);
     }
   };
 
-  if (!isOpen) return null;
-
   return (
-    <div className="modal">
-      <div className="modal-content">
-        <span className="close" onClick={onClose}>&times;</span>
-        <form onSubmit={onSubmit}>
-          <input
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="xs" aria-labelledby="create-folder-title">
+      <form onSubmit={onSubmit}>
+        <DialogTitle id="create-folder-title">Create Folder</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Folder Name"
             type="text"
+            fullWidth
+            required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Folder Name"
-            required
           />
-          <button type="submit">Create Folder</button>
-        </form>
-      </div>
-    </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onClose} disabled={submitting}>Cancel</Button>
+          <Button type="submit" disabled={submitting || !name.trim()}>Create</Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

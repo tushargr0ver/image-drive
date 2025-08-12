@@ -6,6 +6,8 @@ import Folder from '../components/Folder';
 import Image from '../components/Image';
 import CreateFolderModal from '../components/CreateFolderModal';
 import UploadImageModal from '../components/UploadImageModal';
+import ItemGrid from '../components/ItemGrid';
+import { Button, Stack, Typography } from '@mui/material';
 
 const Dashboard = () => {
   const { auth } = useContext(AuthContext);
@@ -55,9 +57,11 @@ const Dashboard = () => {
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      <button onClick={() => setFolderModalOpen(true)}>Create Folder</button>
-      <button onClick={() => setImageModalOpen(true)}>Upload Image</button>
+      <Typography variant="h1" sx={{ fontSize: 32, mb: 2 }}>Dashboard</Typography>
+      <Stack direction="row" spacing={2} mb={2}>
+        <Button size="small" onClick={() => setFolderModalOpen(true)}>Create Folder</Button>
+        <Button size="small" color="secondary" onClick={() => setImageModalOpen(true)}>Upload Image</Button>
+      </Stack>
       <CreateFolderModal 
         isOpen={isFolderModalOpen} 
         onClose={() => setFolderModalOpen(false)} 
@@ -68,11 +72,15 @@ const Dashboard = () => {
         onClose={() => setImageModalOpen(false)}
         onImageUploaded={onImageUploaded}
       />
-      <div>
-        {filteredItems.map((item) =>
-          item.url ? <Image key={item._id} image={item} /> : <Folder key={item._id} folder={item} />
-        )}
-      </div>
+      {filteredItems.length === 0 ? (
+        <Typography variant="body1" sx={{ mt: 3 }}>No items {searchTerm ? 'match your search.' : 'yet. Create or upload to get started.'}</Typography>
+      ) : (
+        <ItemGrid>
+          {filteredItems.map((item) =>
+            item.url ? <Image key={item._id} image={item} /> : <Folder key={item._id} folder={item} />
+          )}
+        </ItemGrid>
+      )}
     </div>
   );
 };
