@@ -8,7 +8,7 @@ import { Box, Typography, LinearProgress } from '@mui/material';
 const UploadImageModal = ({ isOpen, onClose, folder, onImageUploaded }) => {
   const [name, setName] = useState('');
   const [file, setFile] = useState(null);
-  const { auth } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [submitting, setSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -50,16 +50,15 @@ const UploadImageModal = ({ isOpen, onClose, folder, onImageUploaded }) => {
     if (folder) formData.append('folder', folder);
 
     try {
-      const config = {
-        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${auth.token}` },
+      const res = await axios.post('/api/images', formData, {
+        headers: { 'Content-Type': 'multipart/form-data', Authorization: `Bearer ${token}` },
         onUploadProgress: (evt) => {
           if (evt.total) {
             const pct = Math.round((evt.loaded / evt.total) * 100);
             setUploadProgress(pct);
           }
         }
-      };
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/images`, formData, config);
+      });
       onImageUploaded(res.data);
       setName('');
       setFile(null);

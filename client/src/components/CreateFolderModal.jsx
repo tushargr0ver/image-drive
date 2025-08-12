@@ -5,21 +5,14 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } 
 
 const CreateFolderModal = ({ isOpen, onClose, parent, onFolderCreated }) => {
   const [name, setName] = useState('');
-  const { auth } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [submitting, setSubmitting] = useState(false);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${auth.token}`,
-        },
-      };
-      const body = JSON.stringify({ name, parent });
-      const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/folders`, body, config);
+      const res = await axios.post('/api/folders', { name, parent }, { headers: { Authorization: `Bearer ${token}` } });
       onFolderCreated(res.data);
       setName('');
       onClose();

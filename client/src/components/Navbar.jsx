@@ -48,7 +48,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Navbar = () => {
-  const { auth, logout } = useContext(AuthContext);
+  const { token, logout } = useContext(AuthContext);
   const { searchTerm, setSearchTerm } = useContext(SearchContext);
   const [draftSearch, setDraftSearch] = useState(searchTerm);
 
@@ -63,7 +63,7 @@ const Navbar = () => {
         <Typography variant="h6" component={Link} to="/" sx={{ flexGrow: 1, color: 'inherit', textDecoration: 'none' }}>
           ImageDrive
         </Typography>
-        {auth.token ? (
+        {token ? (
           <>
             <Search>
               <SearchIconWrapper>

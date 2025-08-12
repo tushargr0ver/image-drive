@@ -10,7 +10,7 @@ import ItemGrid from '../components/ItemGrid';
 import { Button, Stack, Typography } from '@mui/material';
 
 const Dashboard = () => {
-  const { auth } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { searchTerm } = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isFolderModalOpen, setFolderModalOpen] = useState(false);
@@ -20,11 +20,11 @@ const Dashboard = () => {
     try {
       const config = {
         headers: {
-          Authorization: `Bearer ${auth.token}`,
+          Authorization: `Bearer ${token}`,
         },
       };
-      const foldersRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/folders`, config);
-      const imagesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/images`, config);
+      const foldersRes = await axios.get('/api/folders', config);
+      const imagesRes = await axios.get('/api/images', config);
 
       const rootFolders = foldersRes.data.filter(f => f.parent === null);
       const rootImages = imagesRes.data.filter(i => i.folder === null);
@@ -36,10 +36,10 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    if (auth.token) {
+    if (token) {
       fetchRootItems();
     }
-  }, [auth.token]);
+  }, [token]);
 
   const onFolderCreated = (folder) => {
     setItems([...items, folder]);

@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 
 const FolderPage = () => {
   const { folderId } = useParams();
-  const { auth } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const { searchTerm } = useContext(SearchContext);
   const [folder, setFolder] = useState(null);
   const [items, setItems] = useState([]);
@@ -22,13 +22,9 @@ const FolderPage = () => {
 
   const fetchFolderContents = async () => {
     try {
-      const config = {
-        headers: {
-          Authorization: `Bearer ${auth.token}`,
-        },
-      };
-      const folderRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/folders/${folderId}`, config);
-      const imagesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/images/folder/${folderId}`, config);
+      const config = { headers: { Authorization: `Bearer ${token}` } };
+      const folderRes = await axios.get(`/api/folders/${folderId}`, config);
+      const imagesRes = await axios.get(`/api/images/folder/${folderId}`, config);
 
       setFolder(folderRes.data);
       setItems(imagesRes.data);
@@ -38,10 +34,10 @@ const FolderPage = () => {
   };
 
   useEffect(() => {
-    if (auth.token) {
+    if (token) {
       fetchFolderContents();
     }
-  }, [auth.token, folderId]);
+  }, [token, folderId]);
 
   const onFolderCreated = (newFolder) => {
     // This should ideally re-fetch or update state appropriately
