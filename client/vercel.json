@@ -1,8 +1,7 @@
 {
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/"
-    }
+    { "source": "/api/(.*)", "destination": "https://image-drive-s10h.onrender.com/api/$1" },
+    { "source": "/uploads/(.*)", "destination": "https://image-drive-s10h.onrender.com/uploads/$1" },
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
