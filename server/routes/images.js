@@ -27,12 +27,23 @@ router.post('/', [auth, upload.single('image')], async (req, res) => {
 // Get all images for a user
 router.get('/', auth, async (req, res) => {
     try {
-      const images = await Image.find({ user: req.user.id });
+      const images = await Image.find({ user: req.user.id, folder: null });
       res.json(images);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server Error');
     }
   });
+
+// Get all images in a folder
+router.get('/folder/:folderId', auth, async (req, res) => {
+    try {
+        const images = await Image.find({ user: req.user.id, folder: req.params.folderId });
+        res.json(images);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
 
 module.exports = router;

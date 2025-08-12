@@ -1,6 +1,7 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useMemo } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import { SearchContext } from '../context/SearchContext';
 import Folder from '../components/Folder';
 import Image from '../components/Image';
 import CreateFolderModal from '../components/CreateFolderModal';
@@ -8,6 +9,7 @@ import UploadImageModal from '../components/UploadImageModal';
 
 const Dashboard = () => {
   const { auth } = useContext(AuthContext);
+  const { searchTerm } = useContext(SearchContext);
   const [items, setItems] = useState([]);
   const [isFolderModalOpen, setFolderModalOpen] = useState(false);
   const [isImageModalOpen, setImageModalOpen] = useState(false);
@@ -45,6 +47,12 @@ const Dashboard = () => {
     setItems([...items, image]);
   };
 
+  const filteredItems = useMemo(() => {
+    if (!searchTerm.trim()) return items;
+    const term = searchTerm.toLowerCase();
+    return items.filter(item => (item.name || '').toLowerCase().includes(term));
+  }, [items, searchTerm]);
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -61,7 +69,7 @@ const Dashboard = () => {
         onImageUploaded={onImageUploaded}
       />
       <div>
-        {items.map((item) =>
+        {filteredItems.map((item) =>
           item.url ? <Image key={item._id} image={item} /> : <Folder key={item._id} folder={item} />
         )}
       </div>
